@@ -1,76 +1,38 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class LinkedList_Study<T>
+public class LinkedList : MonoBehaviour
 {
-    public T Data { get; set; }
-    public LinkedList_Study<T> Next { get; set; }
-    public LinkedList_Study(T data)
+    void Start()
     {
-        this.Data = data;
-        this.Next = null;
-    }
+        LinkedList<int> list = new LinkedList<int>();
 
-    private LinkedList_Study<T> head;
+        list.AddFirst(10);    //10
+        list.AddLast(20);     //10, 20
+        list.AddLast(30);     //10, 20, 30
+        list.AddFirst(9);     //9, 10, 20, 30
 
-    public void Add(LinkedList_Study<T> newNode) // 새 노드를 추가.
-    {
-        if (head == null) head = newNode; //리스트가 비어 있을 때 head에 새 노드를 할당.
-        else // 리스트가 비어있지 않을 때.
+        for (var node = list.First; node != null; node = node.Next)
         {
-            var current = head;
-            while (current != null && current.Next != null)  // 마지막 노드(Tail)로 이동하여 추가.
-                current = current.Next;
-            current.Next = newNode;
+            print("추가한 노드 : " + node.Value);
         }
-    }
 
-    public void AddAfter(LinkedList_Study<T> current, LinkedList_Study<T> newNode) //새 노드를 중간에 삽입.
-    {
-        if (head == null || current == null || newNode == null)
-            throw new InvalidOperationException();
-        newNode.Next = current.Next;
-        current.Next = newNode;
-    }
+        //노드 찾기
+        LinkedListNode<int> nodeTemp = list.Find(20);
 
-    public void Remove(LinkedList_Study<T> removeNode) // 특정 노드를 삭제.
-    {
-        if (head == null || removeNode == null) return;
-        if (removeNode == head)
-        {
-            head = head.Next;
-            removeNode = null;
-        }
-        else
-        {
-            var current = head;
-            while (current != null && current.Next != removeNode) current = current.Next;
-            if (current != null)
-            {
-                current.Next = removeNode.Next;
-                removeNode = null;
-            }
-        }
-    }
+        // 노드 특정 위치에 추가하기 ==> 이중 연결 리스트
+        list.AddAfter(nodeTemp, 21);
+        list.AddBefore(nodeTemp, 19);
 
-    public LinkedList_Study<T> GetNode(int index) // 지정한 위치에 있는 노드를 반환.
-    {
-        var current = head;
-        for (int i = 0; i < index && current != null; i++)
-        {
-            current = current.Next;
-        }
-        return current;
-    }
+        //삭제
+        list.Remove(10);
 
-    public int Count() // head부터 마지막 노드까지 이동하면서 카운트 증가(노드가 몇개 있는지)
-    {
-        int cnt = 0;
-        var current = head;
-        while (current != null)
+        //검색
+        for (var node = list.First; node != null; node = node.Next)
         {
-            cnt++;
-            current = current.Next;
+            print(node.Value);
         }
-        return cnt;
     }
 }
